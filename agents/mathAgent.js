@@ -1,14 +1,21 @@
-// agents/mathAgent.js
 const gemini = require('../services/geminiService');
 const calculator = require('../tools/calculator');
 
 async function answer(question) {
-  const calcMatch = question.match(/([-+*/\d\s.]+)/);
-  if (calcMatch) {
+  console.log("Question received:", question);
+
+  // Use regex to match math expressions like "2+2" from a sentence like "what is 2+2"
+  const calcMatch = question.toLowerCase().match(/([\d\s()+\-*/.]+)/);
+  const expression = calcMatch ? calcMatch[1].trim() : null;
+
+  console.log("Extracted expression:", expression);
+
+  if (expression && /^[\d+\-*/().\s]+$/.test(expression)) {
     try {
-      const result = calculator.evaluate(calcMatch[0]);
+      const result = calculator.evaluate(expression);
       return `The result is: ${result}`;
-    } catch {
+    } catch (err) {
+      console.error("Evaluation error:", err.message);
       return "I couldn't calculate that expression.";
     }
   }

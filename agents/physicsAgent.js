@@ -1,12 +1,12 @@
-// agents/physicsAgent.js
 const gemini = require('../services/geminiService');
-const constants = require('../tools/constants.json');
+const constants = require('../tools/constants');
 
 async function answer(question) {
-  const lower = question.toLowerCase();
-  for (let key in constants) {
-    if (lower.includes(key.toLowerCase())) {
-      return `The ${key} is approximately ${constants[key]}.`;
+  // Check if question asks for a constant
+  const keys = Object.keys(constants);
+  for (let key of keys) {
+    if (question.toLowerCase().includes(key)) {
+      return `The value of ${key} is ${constants[key]}.`;
     }
   }
 
